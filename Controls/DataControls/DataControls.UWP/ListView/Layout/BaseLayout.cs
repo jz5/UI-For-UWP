@@ -160,6 +160,8 @@ namespace Telerik.Data.Core.Layouts
             return GroupType.BottomLevel;
         }
 
+        internal abstract bool TryGetGroupInfo(int slot, out GroupInfo groupInfo, out int lowerBound);
+
         internal abstract GroupInfo GetGroupInfo(object item);
 
         internal abstract int GetVisibleSlot(int index);

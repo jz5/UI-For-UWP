@@ -477,6 +477,11 @@ namespace Telerik.Data.Core.Layouts
             return this.collapsedSlotsTable.GetIndexCount(startSlot, endSlot);
         }
 
+        internal override bool TryGetGroupInfo(int slot, out GroupInfo groupInfo, out int lowerBound)
+        {
+            return this.groupHeadersTable.TryGetValue(slot, out groupInfo, out lowerBound);
+        }
+
         internal override GroupInfo GetGroupInfo(object item)
         {
             GroupInfo groupInfo;

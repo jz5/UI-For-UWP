@@ -160,7 +160,7 @@ namespace Telerik.UI.Xaml.Controls.Primitives.DragDrop.Reorder
             {
                 var currentDestinationItem = this.Host.ElementAt(i);
 
-                if (this.animatingElements.Contains(currentDestinationItem))
+                if (currentDestinationItem == null || this.animatingElements.Contains(currentDestinationItem))
                 {
                     continue;
                 }

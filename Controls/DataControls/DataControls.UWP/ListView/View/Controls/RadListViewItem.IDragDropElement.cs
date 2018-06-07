@@ -26,18 +26,18 @@ namespace Telerik.UI.Xaml.Controls.Data.ListView
         {
             if (trigger == DragDropTrigger.MouseDrag && !this.IsHandleEnabled)
             {
-                return this.ListView.IsItemReorderEnabled && this.listView.GroupDescriptors.Count == 0;
+                return this.ListView.IsItemReorderEnabled;
             }
 
             if (trigger == DragDropTrigger.Hold)
             {
-                return this.ListView.IsItemReorderEnabled && this.ListView.GroupDescriptors.Count == 0 && !this.IsHandleEnabled;
+                return this.ListView.IsItemReorderEnabled && !this.IsHandleEnabled;
             }
             else
             {
                 if (this.isHandleEnabled && initializeContext == this.reorderHandle)
                 {
-                    return this.ListView.IsItemReorderEnabled && this.ListView.GroupDescriptors.Count == 0 && this.IsHandleEnabled;
+                    return this.ListView.IsItemReorderEnabled && this.IsHandleEnabled;
                 }
 
                 return this.ListView.IsActionOnSwipeEnabled && !(this.ListView.ReorderMode == ListViewReorderMode.Handle && this.ListView.IsItemReorderEnabled == true);

@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Telerik.Data.Core;
+using Telerik.Data.Core.Layouts;
 using Telerik.UI.Xaml.Controls.Data.ListView;
 using Telerik.UI.Xaml.Controls.Primitives.DragDrop;
 using Telerik.UI.Xaml.Controls.Primitives.DragDrop.Reorder;
@@ -66,6 +68,44 @@ namespace Telerik.UI.Xaml.Controls.Data
 
         void IReorderItemsHost.CommitReorderOperation(int sourceIndex, int destinationIndex)
         {
+            var layout = this.model.layoutController.Layout;
+
+            if (this.GroupDescriptors.Count > 0)
+            {
+                GroupInfo sourceInfo;
+                GroupInfo destinationInfo;
+                int sourceOffset;
+                int destinationOffset;
+
+                if (layout.TryGetGroupInfo(sourceIndex, out sourceInfo, out sourceOffset) &&
+                    layout.TryGetGroupInfo(destinationIndex, out destinationInfo, out destinationOffset))
+                {
+                    var sourceGroup = (Group)sourceInfo.Item;
+                    var destinationGroup = (Group)destinationInfo.Item;
+                    var sourcePosition = sourceIndex - sourceOffset - 1;
+                    var destinationPosition = destinationIndex - destinationOffset - 1;
+
+                    var item = sourceGroup.Items[sourcePosition];
+
+                    sourceGroup.RemoveItem(sourcePosition, item, null);
+                    layout.RemoveItem(sourceGroup, item, sourcePosition);
+                    destinationGroup.InsertItem(destinationPosition, item, null);
+                    layout.AddItem(destinationGroup, item, destinationPosition);
+                }
+            }
+            else
+            {
+                var dataProvider = this.model.CurrentDataProvider;
+                var dataGroup = (Group)dataProvider.Results.Root.RowGroup;
+                var item = dataGroup.Items[sourceIndex];
+
+                dataGroup.RemoveItem(sourceIndex, item, null);
+                layout.RemoveItem(null, item, sourceIndex);
+                dataGroup.InsertItem(destinationIndex, item, null);
+                layout.AddItem(null, item, destinationIndex);
+            }
+
+            this.updateService.RegisterUpdate((int)UpdateFlags.AllButData);
         }
 
         internal void PrepareReorderItem(RadListViewItem reorderItem)
